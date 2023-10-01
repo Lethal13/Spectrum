@@ -14,7 +14,7 @@
                 ASSERT(result_ == VK_SUCCESS); \
            } while(0)
 #else
-#define VK_ASSERT(result)
+#define VK_ASSERT(result) result
 #endif
 
 #define VK_EXPORTED_FUNCTION( name ) static PFN_##name name;

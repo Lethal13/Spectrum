@@ -417,7 +417,9 @@ internal uint32_t vk_init(vk_renderer *renderer, platform_read_file *read_file,
 	if(result != VK_SUCCESS) ASSERT(0);
 	load_vk_global_functions();
 	vk_create_instance(&renderer->instance);
+#if SPECTRUM_DEBUG
 	vk_init_debug_messenger(renderer->instance, &renderer->debug_messenger);
+#endif
 	vk_create_surface(renderer->instance, &renderer->surface, extra);
     vk_pick_physical_device(renderer->instance, &renderer->physical_device, renderer->surface);
 	vk_create_device(renderer);
@@ -544,7 +546,9 @@ internal void vk_deinit(vk_renderer *renderer)
 	vkDestroySwapchainKHR(renderer->device, renderer->swapchain, 0);
 	vkDestroyDevice(renderer->device, 0);
 	vkDestroySurfaceKHR(renderer->instance, renderer->surface, 0);
+#if SPECTRUM_DEBUG
     vkDestroyDebugUtilsMessengerEXT(renderer->instance, renderer->debug_messenger, 0);
+#endif
 	vkDestroyInstance(renderer->instance, 0);
 }
 
@@ -612,7 +616,7 @@ internal void vk_create_surface(VkInstance instance, VkSurfaceKHR *surface, void
 internal uint32_t vk_pick_physical_device(VkInstance instance, VkPhysicalDevice *physical_device,
 		VkSurfaceKHR surface)
 {
-	uint32_t total_physical_devices;
+	uint32_t total_physical_devices = 0;
     VK_ASSERT(vkEnumeratePhysicalDevices(instance, &total_physical_devices, 0));
     ASSERT(total_physical_devices > 0);
 	
@@ -660,7 +664,7 @@ internal uint32_t vk_pick_physical_device(VkInstance instance, VkPhysicalDevice 
 
 internal VkBool32 physical_device_surface_support(VkPhysicalDevice physical_device, VkSurfaceKHR surface)
 {
-    uint32_t queue_families_count;
+    uint32_t queue_families_count = 0;
 
     vkGetPhysicalDeviceQueueFamilyProperties(physical_device, &queue_families_count, 0);
 
@@ -829,7 +833,7 @@ internal VkExtent2D vk_choose_swapchain_extent(VkSurfaceCapabilitiesKHR *surface
 
 internal surface_details vk_get_surface_details(VkPhysicalDevice physical_device, VkSurfaceKHR surface)
 {
-    surface_details details;
+    surface_details details = {0};
 
     VK_ASSERT(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physical_device, surface,
         &details.surface_capabilities));
