@@ -30,4 +30,4 @@ For now, no third party software is being used.
 For now it's a typically forward renderer that renders an obj file.
 
 ## Example
-![Alt text](/result.png?raw=true "Initial Screen")
+![Alt text](/example.png?raw=true "Example")
